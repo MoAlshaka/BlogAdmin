@@ -11,7 +11,7 @@ class PostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,7 @@ class PostRequest extends FormRequest
             'title' => 'required|max:100',
             'tag' => 'required|max:100',
             'content' => 'required',
+            'category_id' => 'required',
             'image' => 'required|mimes:png,jpg',
         ];
     }

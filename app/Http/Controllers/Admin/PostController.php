@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
+        return view('admin.posts.index')->with(['posts' => $posts]);
     }
 
     /**
@@ -25,6 +27,8 @@ class PostController extends Controller
     {
         //
         $tags = Post::pluck('tag');
+        $categories = Category::all();
+        return view('admin.posts.create')->with(['tags' => $tags, 'categories' => $categories]);
     }
 
     /**
@@ -40,8 +44,9 @@ class PostController extends Controller
             'tag' => $request->tag,
             'image' => $imageName,
             'content' => $request->content,
-            'categroy_id' => $request->categroy_id
+            'category_id' => $request->category_id
         ]);
+        return redirect()->route('posts.index')->with(['Add' => 'Add successfully']);
     }
 
     /**
@@ -50,6 +55,7 @@ class PostController extends Controller
     public function show(string $id)
     {
         $post = Post::findorfail($id);
+        return view('admin.posts.show')->with(['post' => $post]);
     }
 
     /**
@@ -57,7 +63,9 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = Post::findorfail($id);
+        $tags = Post::pluck('tag');
+        return view('admin.posts.edit')->with(['post' => $post, 'tags' => $tags]);
     }
 
     /**
@@ -78,7 +86,10 @@ class PostController extends Controller
             'tag' => $request->tag,
             'image' => $image_name,
             'content' => $request->content,
+            'category_id' => $request->category_id
         ]);
+
+        return redirect()->route('posts.index')->with(['Update' => 'Update successfully']);
     }
 
     /**
@@ -87,5 +98,6 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         Post::destroy($id);
+        return redirect()->route('posts.index')->with(['Delete' => 'Delete successfully']);
     }
 }

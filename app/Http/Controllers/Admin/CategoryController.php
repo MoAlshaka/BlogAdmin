@@ -14,6 +14,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+        return view('admin.categories.index')->with(['categories' => $categories]);
     }
 
     /**
@@ -21,6 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        return view('admin.categories.create');
     }
 
     /**
@@ -35,6 +37,7 @@ class CategoryController extends Controller
         Category::create([
             'name' => $request->name,
         ]);
+        return redirect()->route('category.index')->with(['Add' => 'Add successfully']);
     }
 
     /**
@@ -43,6 +46,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         $category = Category::findorfail($id);
+        return view('admin.categories.show')->with(['category' => $category]);
     }
 
     /**
@@ -50,7 +54,8 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::findorfail($id);
+        return view('admin.categories.edit')->with(['category' => $category]);
     }
 
     /**
@@ -63,9 +68,10 @@ class CategoryController extends Controller
 
         ]);
         $category = Category::findorfail($id);
-        Category::updated([
+        $category->update([
             'name' => $request->name,
         ]);
+        return redirect()->route('category.index')->with(['Update' => 'Update successfully']);
     }
 
     /**
@@ -76,7 +82,7 @@ class CategoryController extends Controller
 
         try {
             Category::destroy($id);
-            return redirect()->route('category.index')->with(['Delete' => 'تم الحذف  بنجاح']);
+            return redirect()->route('category.index')->with(['Delete' => 'Delete successfully']);
         } catch (\Throwable $th) {
             return redirect()->route('category.index')->with(['Warning' => 'لا يمكن حذف هذا الحقل لانه مرتيط بحقول أخرى']);
         }

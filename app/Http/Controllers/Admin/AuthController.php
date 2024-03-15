@@ -16,15 +16,15 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required',
-            'password' => 'required',
+            'username' => 'required|max:50',
+            'password' => 'required|max:50',
         ]);
 
-        if (auth()->guard('admin')->attempt(['username' => $request->input('username'), 'password' => $request->input('password')])) {
+        if (auth()->guard('admin')->attempt(['username' => $request->username, 'password' => $request->password])) {
             return redirect()->route('admin.dashboard');
         } else {
             return redirect()->back()->with([
-                'message' => 'the username or password is not correct'
+                'error' => 'the username or password is not correct'
             ]);
         }
     }
